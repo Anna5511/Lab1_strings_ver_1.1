@@ -2,14 +2,13 @@
 #include <fstream>
 
 // Размер строки
-const unsigned sizeMAX = 100;
-// Временное фиксированное задания маркера и символа окончания строки
-const char marker = '@';
-const char mEndLine = '!';
+const unsigned N = 100;
+const char mark = '@';
+const char stop = '!';
 
 struct string
 {
-	char string[sizeMAX + 1];
+	char string[N + 1];
 	unsigned markerIndex = NULL;
 	bool flag_marker = false;
 	unsigned size;
@@ -33,13 +32,13 @@ struct string
 		if (!file.is_open())
 			errorExit("Ошибка открытия файла \"" + filename + "\"");
 		char ch;	// Переменная чтения из файла
-		for (unsigned i = 0; i < 100; i++)
+		for (unsigned i = 0; i < N; i++)
 		{
 			file.get(ch);							// Посимвольное чтение
-			if (ch == mEndLine) return i;			// Если встретили символ конца строки, заканчиваем чтение
-			if (ch == marker) { markerIndex = i; flag_marker++; }		// Если встретили маркер, запоминаем его индекс
+			if (ch == stop) return i;			// Если встретили символ конца строки, заканчиваем чтение
+			if (ch == mark) { markerIndex = i; flag_marker++; }		// Если встретили маркер, запоминаем его индекс
 			string[i] = ch;							// Записываем символ в char массив
-			if (i == 99)
+			if (i == N-1)
 			{
 				std::cout << "Символ конца строки не найден! ";
 				if (markerIndex)
@@ -47,14 +46,14 @@ struct string
 				else
 					std::cout << "Кол-во символов с учётом маркера 101" << std::endl << std::endl;
 				file.get(ch);					// Посимвольное чтение
-				if (ch == marker)				// Если маркер после окончания строки, записываем его в неё
+				if (ch == mark)				// Если маркер после окончания строки, записываем его в неё
 				{
-					string[i + 1] = marker;
+					string[i + 1] = mark;
 					markerIndex = i + 1;		// Запись индекса маркера
 					flag_marker++;
-					return sizeMAX + 1;						// Возвращаем кол-во эл-ов равное sizeMax + 1 (sizeMax символов + маркер)
+					return N + 1;						// Возвращаем кол-во эл-ов равное N + 1 (N символов + маркер)
 				}
-				return 100;
+				return N;
 			}
 		}
 	}
@@ -75,7 +74,7 @@ struct string
 			}
 			else {
 				if (!flag_marker)
-					std::cout << std::endl << "!!!NO MARKER!!!" << std::endl;
+					std::cout << std::endl << "!!!NO mark!!!" << std::endl;
 				std::cout << string[i];
 			}
 		}
@@ -87,7 +86,7 @@ struct string
 // Ставит маркер в случае его отсутствия
 void setMarker(string str)
 {
-	str.string[str.size] = marker;
+	str.string[str.size] = mark;
 	str.size++;
 }
 
@@ -97,7 +96,7 @@ void swapSubstring_Legacy(unsigned size, char* string, unsigned& markerIndex)
 	if (size % 2 == 0)	// Если размер вместе с маркером чётен
 	{
 		// Меняем подстроки местами
-		char substring[sizeMAX / 2];
+		char substring[N / 2];
 		for (unsigned i = 0; i < size / 2; i++)
 		{
 			substring[i] = string[i];
@@ -114,7 +113,7 @@ void swapSubstring_Legacy(unsigned size, char* string, unsigned& markerIndex)
 	else
 	{
 		// Меняем подстроки местами
-		char substring[sizeMAX / 2];
+		char substring[N / 2];
 		for (unsigned i = 0; i < (size - 1) / 2; i++)
 		{
 			substring[i] = string[i];
@@ -174,7 +173,7 @@ int main()
 {
 	setlocale(LC_ALL, "rus");
 
-	//char stringL[sizeMAX + 1];
+	//char stringL[N + 1];
 	//unsigned markerIndex = NULL;
 	//bool flag_marker = false;
 
