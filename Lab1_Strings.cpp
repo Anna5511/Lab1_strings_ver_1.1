@@ -94,35 +94,53 @@ bool inp(strm& a) {
 
 
 
-    while (true) {
+    while (!(file.eof())) {
         char n = file_num + '0';
         outp("Cтрока №", "", n);
 
 
-        file >> a.mark;
+        file.get(a.mark);
         if (a.mark == '\n') {
             outp("Ошибка - пустая строка", "", ' ');
-            
-            return false;
+            file_num++;
+            outp("----------------", "", ' ');
+            continue;
         }
 
-        file >> stop;
+        file.get(stop);
         if (stop == '\n') {
             outp("Ошибка - нет ограничителя", "", ' ');
-            return false;
+            file_num++;
+            outp("----------------", "", ' ');
+            continue;
         }
 
         unsigned i = 0;
+        bool flag = false;
 
         while (file.get(c)) {
-            if (c == stop || c == '\n' || file.eof() || c == a.mark) break;
+            if (c == stop || c == a.mark) break;
+            if (c == '\n' || file.eof()) {
+                file_num++;
+                outp("Ошибка - в строке нет маркера и ограничителя", "", ' ');
+                outp("----------------", "", ' ');
+                flag = true;
+                break;
+
+            }
             a.A[i] = c;
-            i++;
-            if (i >= N) {
+            
+            if (i > N-1) {
                 outp("Ошибка - в строке больше 100 символов", "", ' ');
+                file_num++;
+                outp("----------------", "", ' ');
+                flag = true;
                 break;
             }
+            i++;
         }
+
+        if (flag)continue;
 
         if (i == 0) {
             outp("Ошибка - пустая строка", "", ' ');
@@ -131,11 +149,10 @@ bool inp(strm& a) {
 
         if (i == N) {
             outp("В строке ровно 100 символов", "", ' ');
-            std::cout << "В строке ровно 100 символов";
         }
-
-        a.A[i] = a.mark;
-        a.A[i + 1] = '\0';
+        std::cout << "i:" << i;
+        a.A[i-1] = a.mark;
+        a.A[i] = '\0';
 
         outp("Маркер: ", "", a.mark);
         outp("Ограничитель: ", "", stop);
@@ -165,10 +182,7 @@ bool inp(strm& a) {
 int main(){
 	setlocale(LC_ALL, "ru");
     strm file;
-
     if(!(inp(file))) return 0;
-
-    
 
 	return 0;
 }
