@@ -3,7 +3,7 @@
 #include <fstream>
 
 const unsigned N = 100;
-struct strm{ char mark; char A[N + 1]; };
+struct strm { char mark; char A[N + 1]; };
 
 /// <summary>
 /// Функция вывода в файл out.txt
@@ -14,11 +14,25 @@ struct strm{ char mark; char A[N + 1]; };
 void outp(const char* text, const char* str, char c)
 {
     std::ofstream file("C:\\Users\\Анечка\\Documents\\out.txt", std::ios::app);
-    file << text << c << str << std::endl;
+    
+    if (str != "") {
+        file << text;
+        for (int i = 0; i < 100; i++) {
+            if (str[i] == '\0') {
+                file << std::endl;
+                file.close();
+                break;
+            }
+            file << str[i];
+        }
+        file << std::endl;
+    }
+    else{
+        file << text << c << str << std::endl;
+    }
 
     file.close();
 }
-
 
 /// <summary>
 /// Перемещает символы в строке
@@ -29,7 +43,7 @@ void swap(strm& a, int len)
 {
     char temp = a.A[0];
     for (int i = 0; i < len; i++) {
-        a.A[i] = a.A[i+1];
+        a.A[i] = a.A[i + 1];
     }
     a.A[len] = temp;
 }
@@ -64,11 +78,9 @@ void process(strm& a, int o_pos, int n_pos)
         swap(a, len);
         o_pos--;
     }
-
     outp("Результат : ", a.A, ' ');
 
 }
-
 
 /// <summary>
 /// Функция ввода из файла
@@ -92,8 +104,7 @@ bool inp(strm& a) {
         return false;
     }
 
-
-
+    //читает построчно файл, считывает маркеты и ограничители, читает строки, если что-то не так, то выдает ошибки
     while (!(file.eof())) {
         char n = file_num + '0';
         outp("Cтрока №", "", n);
@@ -128,31 +139,40 @@ bool inp(strm& a) {
                 break;
 
             }
+
             a.A[i] = c;
-            
-            if (i > N-1) {
+            i++;
+            if (i > N) {
                 outp("Ошибка - в строке больше 100 символов", "", ' ');
                 file_num++;
                 outp("----------------", "", ' ');
                 flag = true;
                 break;
-            }
-            i++;
+            }     
+            
         }
 
-        if (flag)continue;
+        //Пропускает остаток строки и переходит на следующую строчку
+        if (flag) { 
+            while (file.get(c)) {
+                if (c == '\n') break;
+                if (file.eof()) return true;
+            }
+            continue;
+        }
 
         if (i == 0) {
             outp("Ошибка - пустая строка", "", ' ');
             return 0;
         }
-
         if (i == N) {
             outp("В строке ровно 100 символов", "", ' ');
+            a.A[i] = a.mark;
         }
-        std::cout << "i:" << i;
-        a.A[i-1] = a.mark;
-        a.A[i] = '\0';
+        if(i < N){
+            a.A[i] = a.mark;
+            a.A[i + 1] = '\0';
+        }
 
         outp("Маркер: ", "", a.mark);
         outp("Ограничитель: ", "", stop);
@@ -164,7 +184,7 @@ bool inp(strm& a) {
         }
 
         file_num++;
-        
+
 
         int o_pos = poisk_pos(a);
         int n_pos = (poisk_pos(a)) / 2 + (poisk_pos(a)) % 2;
@@ -179,10 +199,10 @@ bool inp(strm& a) {
     return true;
 }
 
-int main(){
-	setlocale(LC_ALL, "ru");
+int main() {
+    setlocale(LC_ALL, "ru");
     strm file;
-    if(!(inp(file))) return 0;
+    if (!(inp(file))) return 0;
 
-	return 0;
+    return 0;
 }
