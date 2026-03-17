@@ -1,1 +1,16 @@
-мяу : ow@meмяу : ow@me
+Cтрока №1
+Маркер: @
+Ограничитель: !
+Строка: AABB@
+Результат : BB@AA
+---------------- 
+Cтрока №2
+В строке ровно 100 символов 
+Маркер: @
+Ограничитель: !
+Строка: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB1234567890
+Результат : BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB1234567890@AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+---------------- 
+Cтрока №3
+Ошибка - в строке больше 100 символов 
+---------------- 
