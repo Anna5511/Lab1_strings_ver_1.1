@@ -21,7 +21,7 @@ void outp(const char* text, const char* str, char mark_symbol)
 {
     std::ofstream file("C:\\Users\\Анечка\\Documents\\out1.txt", std::ios::app);
         
-    if (str != "") {
+    if (str && str[0]) {
         file << text;
         for (int i = 0; i < N; i++) {
             if (str[i] != mark_symbol) {
@@ -29,7 +29,6 @@ void outp(const char* text, const char* str, char mark_symbol)
             }
             else {
                 file << std::endl;
-                file.close();
                 break;
             }
         }
@@ -62,6 +61,7 @@ void swap(strm& a, char mark){
         }
         else {
             a.A[i] = temp;
+            break;
         }
     }
 }
@@ -75,7 +75,7 @@ void swap(strm& a, char mark){
 int poisk_pos(strm& a) {
     int pos = 0;
 
-    while (a.A[pos] != a.mark || pos != N)
+    while (a.A[pos] != a.mark && pos != N)
     {
         if (a.A[pos] == a.mark) {
             return pos;
@@ -233,7 +233,7 @@ void skipToNextLine(std::ifstream& file) {
 /// <param name="a"> - структура на вход</param>
 /// <returns></returns>
 bool readLine(std::ifstream& file, strm& a) {
-    char c = ' ';
+    char c;
     char stop;
     // Читаем маркер
     if (!file.get(a.mark)) {
@@ -254,7 +254,8 @@ bool readLine(std::ifstream& file, strm& a) {
 
     // Читаем строку до маркера или ограничителя
     unsigned i = 0;
-    while (c != '\n' || !(file.eof())) {
+    file.get(c);
+    while (c != '\n' && !(file.eof())) {
         file.get(c);
         if (c == stop || c == a.mark) {
 
@@ -268,13 +269,8 @@ bool readLine(std::ifstream& file, strm& a) {
 
         a.A[i] = c;
         i++;
-
-        if (i > N-1) {
-            outp("В строке больше 100 символов - читаем первые 100", "", ' ');
-            break;
-        }
-        if (i == N - 1) {
-            outp("В строке ровно! 100 символов", "", ' ');
+        if (i == N) {
+            outp("В строке взяты первые 100 символов", "", ' ');
             break;
         }
     }
