@@ -221,7 +221,7 @@ bool inp(strm& a) {
 int main() {
     clear_File();
     setlocale(LC_ALL, "ru");
-
+    ///
     strm file;
     if (!(inp(file))) return 0;
 
