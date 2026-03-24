@@ -5,6 +5,10 @@
 const unsigned N = 100;
 struct strm { char mark; char A[N + 1]; };
 
+void clear_File(){
+    std::ofstream File("C:\\Users\\Анечка\\Documents\\out1.txt", std::ios::trunc);
+    File.close();
+}
 
 /// <summary>
 /// Функция вывода в файл out.txt
@@ -215,6 +219,9 @@ bool inp(strm& a) {
 }
 
 int main() {
+    clear_File();
+    
+
     setlocale(LC_ALL, "ru");
     strm file;
     if (!(inp(file))) return 0;
