@@ -5,15 +5,18 @@
 const unsigned N = 100;
 struct strm { char mark; char A[N + 1]; };
 
+
 /// <summary>
 /// Функция вывода в файл out.txt
 /// </summary>
 /// <param name="text"> - сообщение</param>
 /// <param name="str"> - строка на вывод</param>
 /// <param name="c"> - символ на вывод</param>
-bool outp(const char* text, const char* str, char c)
+/// <param name="mark"> - маркер (до него читается строка)</param>
+/// <returns></returns>
+bool outp(const char* text, const char* str, char c, char mark)
 {
-    std::ofstream file("C:\\Users\\Анечка\\Documents\\out.txt", std::ios::app);
+    std::ofstream file("C:\\Users\\Анечка\\Documents\\out1.txt", std::ios::app);
 
     if (!file.is_open()) {
         std::cout << "Ошибка открытия выходного файла";
@@ -22,13 +25,15 @@ bool outp(const char* text, const char* str, char c)
     
     if (str != "") {
         file << text;
-        for (int i = 0; i < 100; i++) {
-            if (str[i] == '\0') {
+        for (int i = 0; i < N; i++) {
+            if (str[i] != mark) {
+                file << str[i];
+            }
+            else {
                 file << std::endl;
                 file.close();
                 break;
             }
-            file << str[i];
         }
         file << std::endl;
     }
@@ -40,18 +45,22 @@ bool outp(const char* text, const char* str, char c)
     return true;
 }
 
+
 /// <summary>
-/// Перемещает символы в строке
+/// Перемещает символы в строке до маркера
 /// </summary>
 /// <param name="a"> - структура {маркер ; строка с маркером} </param>
-/// <param name="len"> - изначальная позиция маркера </param>
-void swap(strm& a, int len)
-{
+/// <param name="mark"> - маркер </param>
+void swap(strm& a, char mark){
     char temp = a.A[0];
-    for (int i = 0; i < len; i++) {
-        a.A[i] = a.A[i + 1];
+    for (int i = 0; i < N; i++) {
+        if (a.A[i+1] != mark) {
+            a.A[i] = a.A[i + 1];
+        }
+        else {
+            a.A[i] = temp;
+        }
     }
-    a.A[len] = temp;
 }
 
 /// <summary>
@@ -59,10 +68,11 @@ void swap(strm& a, int len)
 /// </summary>
 /// <param name="a"> - структура {маркер ; строка с маркером} </param>
 /// <returns></returns>
+
 int poisk_pos(strm& a) {
     int o_pos = 0;
 
-    while (a.A[o_pos] != '\0')
+    while (a.A[o_pos] != a.mark)
     {
         if (a.A[o_pos] == a.mark) {
             return o_pos;
@@ -77,14 +87,16 @@ int poisk_pos(strm& a) {
 /// <param name="a"> - структура {маркер ; строка с маркером} </param>
 /// <param name="o_pos"> - old marker position (конец строки)</param>
 /// <param name="n_pos"> - new marker position (середина строки)</param>
-void process(strm& a, int o_pos, int n_pos)
+
+//ПЕРЕДЕЛАТЬ!
+void process(strm& a, int o_pos, int n_pos, char mark)
 {
     int len = o_pos;
     while (o_pos != n_pos) {
         swap(a, len);
         o_pos--;
     }
-    outp("Результат : ", a.A, ' ');
+    outp("Результат : ", a.A, ' ', mark);
 
 }
 
@@ -93,9 +105,11 @@ void process(strm& a, int o_pos, int n_pos)
 /// </summary>
 /// <param name="a"> - структура {маркер ; строка с маркером} </param>
 /// <returns></returns>
+
+//ПЕРЕДЕЛАТЬ!
 bool inp(strm& a) {
     int file_num = 1;
-    std::ifstream file("C:\\Users\\Анечка\\Documents\\in.txt", std::ios::in);
+    std::ifstream file("C:\\Users\\Анечка\\Documents\\in1.txt", std::ios::in);
 
     char stop;
     char c;
@@ -180,7 +194,7 @@ bool inp(strm& a) {
         outp("Ограничитель: ", "", stop);
         outp("Строка: ", a.A, ' ');
 
-        while (file.get(c)) {
+        while (file.get(c) && !(file.eof())) {
             if (c == '\n') break;
             if (file.eof()) return true;
         }
