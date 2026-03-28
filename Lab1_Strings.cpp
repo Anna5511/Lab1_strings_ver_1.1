@@ -21,7 +21,7 @@ void outp(const char* text, const char* str, char mark_symbol)
 {
     std::ofstream file("C:\\Users\\Анечка\\Documents\\out1.txt", std::ios::app);
         
-    if (str && str[0]) {
+    if (str[0] != '\0') {
         file << text;
         for (int i = 0; i < N; i++) {
             if (str[i] != mark_symbol) {
@@ -35,7 +35,7 @@ void outp(const char* text, const char* str, char mark_symbol)
         file << std::endl;
     }
     else{
-        file << text << mark_symbol << str << std::endl;
+        file << text << mark_symbol << std::endl;
     }
 
     file.close();
@@ -43,7 +43,7 @@ void outp(const char* text, const char* str, char mark_symbol)
 
 void outp_n(const char* text, int n) {
     std::ofstream file("C:\\Users\\Анечка\\Documents\\out1.txt", std::ios::app);
-    if (n!= 1) file << "-------------------" << std::endl;
+    if (n!= 0) file << "-------------------" << std::endl;
     file << text << n << std::endl;
     file.close();
 }
@@ -77,9 +77,6 @@ int poisk_pos(strm& a) {
 
     while (a.A[pos] != a.mark && pos != N)
     {
-        if (a.A[pos] == a.mark) {
-            return pos;
-        }
         pos++;
     }
     return pos;
@@ -99,7 +96,7 @@ void process(strm& a)
     for (int i = 0; i < pos_count; i++) {
         swap(a, a.mark);
     }
-
+    
     outp("Результат : ", a.A, a.mark);
 
 }
@@ -226,14 +223,21 @@ void skipToNextLine(std::ifstream& file) {
     }
 }
 
+
 /// <summary>
 /// Чтение одной строки из файла
 /// </summary>
 /// <param name="file"> - входной файл для чтения</param>
 /// <param name="a"> - структура на вход</param>
 /// <returns></returns>
-bool readLine(std::ifstream& file, strm& a) {
-    char c;
+bool readLine(std::ifstream& file, strm& a, int n) {
+    char c = ' ';
+    /*for (int i = 0; i < n; i++) {
+        while (file.get(c) && c != '\n') {
+
+        }
+    }*/
+    
     char stop;
     // Читаем маркер
     if (!file.get(a.mark)) {
@@ -252,11 +256,14 @@ bool readLine(std::ifstream& file, strm& a) {
         return false;
     }
 
+    outp("Маркер : ", "", a.mark);
+    outp("Ограничитель : ", "", stop);
+
     // Читаем строку до маркера или ограничителя
     unsigned i = 0;
-    file.get(c);
-    while (c != '\n' && !(file.eof())) {
-        file.get(c);
+    
+    while (file.get(c) && c != '\n') {
+        
         if (c == stop || c == a.mark) {
 
             skipToNextLine(file);
@@ -265,14 +272,17 @@ bool readLine(std::ifstream& file, strm& a) {
             a.A[i] = a.mark;
             return true;
         }
-        
-
         a.A[i] = c;
         i++;
         if (i == N) {
             outp("В строке взяты первые 100 символов", "", ' ');
             break;
         }
+    }
+    if (i == 0) {
+        outp("В строке нет символов", "", ' ');
+        return false;
+
     }
 
     // Добавляем маркер в конец
@@ -302,25 +312,27 @@ int main() {
     
     if (file_check()) return 0;
     //открываем входной файл (ОБРАБОТКА В ДРУГОЙ ФУНКЦИИ, ТУТ МЫ ТОЛЬКО УПРАВЛЯЕМ ЭТИМ ЧТЕНИЕМ!)
+    
     std::ifstream file("C:\\Users\\Анечка\\Documents\\in1.txt");
-
-    int lineNumber = 1;
+    int lineNumber = 0;
 
     // Основной цикл обработки
     while (!file.eof()) {
+        
         strm string;
-        char stop;
 
         outp_n("Номер строки: ", lineNumber);
-        lineNumber++;
+        
 
-        if(!(readLine(file, string))) continue;
+        if(!(readLine(file, string, lineNumber))) continue;
         process(string);
+        lineNumber++;
         
         
 
-        // Проверка на конец файла (чтобы не обрабатывать последнюю пустую строку)
-        if (file.peek() == EOF) break;
+        //// Проверка на конец файла (чтобы не обрабатывать последнюю пустую строку)
+        //if (file.peek() == EOF) break;
+        
     }
 
 
