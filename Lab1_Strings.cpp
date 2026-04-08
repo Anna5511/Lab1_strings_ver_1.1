@@ -37,10 +37,10 @@ void outp_n(const char* text, int n) {
     file.close();
 }
 
-void swap(strm& a, char mark) {
+void swap(strm& a) {
     char temp = a.A[0];
     for (int i = 0; i < N; i++) {
-        if (a.A[i + 1] != mark) {
+        if (a.A[i + 1] != a.mark) {
             a.A[i] = a.A[i + 1];
         }
         else {
@@ -59,8 +59,9 @@ int poisk_pos(strm& a) {
 void process(strm& a) {
     int pos = poisk_pos(a);
     int pos_count = pos / 2 + pos % 2;
+    outp("Строка : ", a.A, a.mark);
     for (int i = 0; i < pos_count; i++) {
-        swap(a, a.mark);
+        swap(a);
     }
     outp("Результат : ", a.A, a.mark);
 }
