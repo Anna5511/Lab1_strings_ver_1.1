@@ -77,11 +77,11 @@ bool readLine(std::ifstream& file, strm& a, int n) {
     char stop;
     // Читаем маркер
     if (!file.get(a.mark)) {
-        outp("Ошибка: Пустой входной файл", "", ' ');
+        outp("Ошибка: Пусто", "", ' ');
         return false;
     }
     if (a.mark == '\n') {
-        outp("Ошибка: Пустая строка (нет маркера)", "", ' ');
+        outp("Ошибка: Пусто", "", ' ');
         return false;
     }
 
